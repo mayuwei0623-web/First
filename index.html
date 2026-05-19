@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>带薪拉屎计算器</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #f4efe7 0%, #d7c3a1 100%);
+      color: #2c241c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 252, 245, 0.96);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(69, 45, 20, 0.22);
+      padding: 24px;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .emoji {
+      font-size: 54px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: #7b6754;
+      font-size: 14px;
+    }
+
+    .form {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #5f4a38;
+      font-weight: 700;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #dfcfbd;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 16px;
+      outline: none;
+      background: #fffaf2;
+      color: #2c241c;
+    }
+
+    input:focus {
+      border-color: #a87942;
+      box-shadow: 0 0 0 3px rgba(168, 121, 66, 0.14);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      margin-top: 8px;
+      border: 0;
+      border-radius: 16px;
+      padding: 15px 18px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #8a5a2b 0%, #5b3517 100%);
+      box-shadow: 0 10px 24px rgba(91, 53, 23, 0.25);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .result {
+      margin-top: 22px;
+      padding: 20px;
+      border-radius: 20px;
+      background: #fff2dc;
+      border: 1px solid #edd5b2;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .money {
+      font-size: 42px;
+      font-weight: 900;
+      color: #6f3f16;
+      text-align: center;
+      margin: 4px 0 10px;
+      word-break: break-all;
+    }
+
+    .desc {
+      text-align: center;
+      font-size: 15px;
+      color: #6b5847;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.62);
+      border-radius: 14px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 16px;
+      color: #3a2b20;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      font-size: 12px;
+      color: #8a7561;
+    }
+
+    .tip {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #8a7561;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 420px) {
+      .app {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .money {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="title">
+      <div class="emoji">🚽</div>
+      <h1>带薪拉屎计算器</h1>
+      <p class="subtitle">上班摸鱼不可耻，至少要算得明白。</p>
+    </section>
+
+    <section class="form">
+      <div class="field">
+        <label for="salary">月薪 / 元</label>
+        <input id="salary" type="number" inputmode="decimal" min="0" placeholder="例如：15000" />
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="workDays">每月工作天数</label>
+          <input id="workDays" type="number" inputmode="decimal" min="1" value="22" />
+        </div>
+
+        <div class="field">
+          <label for="hoursPerDay">每天工作小时</label>
+          <input id="hoursPerDay" type="number" inputmode="decimal" min="1" value="8" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="poopMinutes">本次带薪拉屎时长 / 分钟</label>
+        <input id="poopMinutes" type="number" inputmode="decimal" min="0" placeholder="例如：12" />
+      </div>
+
+      <button onclick="calculate()">开始计算</button>
+    </section>
+
+    <section id="result" class="result">
+      <div class="money" id="earned">¥0.00</div>
+      <p class="desc" id="resultText"></p>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="minutePay">¥0.00</strong>
+          <span>每分钟收入</span>
+        </div>
+        <div class="stat">
+          <strong id="hourPay">¥0.00</strong>
+          <span>每小时收入</span>
+        </div>
+        <div class="stat">
+          <strong id="yearPay">¥0.00</strong>
+          <span>年化厕所收益</span>
+        </div>
+      </div>
+
+      <div class="tip" id="tip"></div>
+    </section>
+  </main>
+
+  <script>
+    function money(value) {
+      return '¥' + Number(value || 0).toFixed(2);
+    }
+
+    function getTip(minutes, earned) {
+      if (minutes <= 5) return '效率型选手：来得快，走得也快。';
+      if (minutes <= 15) return '标准发挥：老板还没发现，工资已经到账。';
+      if (minutes <= 30) return '稳定输出：这不是摸鱼，这是生理需求。';
+      if (minutes <= 60) return '高强度创收：建议带上充电器。';
+      return '厕所战神：你已经把卫生间变成了分公司。';
+    }
+
+    function calculate() {
+      const salary = Number(document.getElementById('salary').value);
+      const workDays = Number(document.getElementById('workDays').value);
+      const hoursPerDay = Number(document.getElementById('hoursPerDay').value);
+      const poopMinutes = Number(document.getElementById('poopMinutes').value);
+
+      if (!salary || !workDays || !hoursPerDay || !poopMinutes || salary <= 0 || workDays <= 0 || hoursPerDay <= 0 || poopMinutes <= 0) {
+        alert('请先把月薪、工作天数、工作小时和拉屎时长填完整。');
+        return;
+      }
+
+      const totalWorkMinutes = workDays * hoursPerDay * 60;
+      const payPerMinute = salary / totalWorkMinutes;
+      const payPerHour = payPerMinute * 60;
+      const earned = payPerMinute * poopMinutes;
+      const yearlyToiletIncome = earned * workDays * 12;
+
+      document.getElementById('earned').textContent = money(earned);
+      document.getElementById('minutePay').textContent = money(payPerMinute);
+      document.getElementById('hourPay').textContent = money(payPerHour);
+      document.getElementById('yearPay').textContent = money(yearlyToiletIncome);
+
+      document.getElementById('resultText').textContent =
+        `本次你在厕所里创造了 ${money(earned)} 的带薪价值，耗时 ${poopMinutes} 分钟。`;
+
+      document.getElementById('tip').textContent = getTip(poopMinutes, earned);
+      document.getElementById('result').classList.add('show');
+    }
+  </script>
+</body>
+</html>
