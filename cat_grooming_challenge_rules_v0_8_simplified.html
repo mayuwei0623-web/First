@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>猫咪梳毛挑战 · 首版功能规则 v0.8 精简版</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --paper: #ffffff;
+      --text: #24201c;
+      --muted: #756b60;
+      --line: #e7ded3;
+      --accent: #d97706;
+      --accent-soft: #fff3df;
+      --danger-soft: #fff1f1;
+      --danger: #991b1b;
+      --ok-soft: #ecfdf3;
+      --ok: #166534;
+      --code-bg: #2b2723;
+      --code-text: #fff7ed;
+      --radius: 16px;
+      --shadow: 0 12px 30px rgba(58, 43, 25, 0.07);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 18px 64px;
+    }
+
+    header {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 30px 34px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .tags {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #8a4b05;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 16px;
+      box-shadow: 0 8px 20px rgba(58, 43, 25, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 17px;
+    }
+
+    h3:first-child { margin-top: 0; }
+
+    p { margin: 8px 0; }
+
+    .quote {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      margin: 12px 0;
+    }
+
+    .note {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    .warn {
+      background: var(--danger-soft);
+      border: 1px solid #fecaca;
+      color: var(--danger);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    .ok {
+      background: var(--ok-soft);
+      border: 1px solid #bbf7d0;
+      color: var(--ok);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 12px 0 18px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th:last-child, td:last-child { border-right: none; }
+    tr:last-child td { border-bottom: none; }
+
+    th {
+      background: #f5efe6;
+      color: #49382a;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    code {
+      background: #f3eee7;
+      color: #7c3f00;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .code {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 12px;
+      padding: 13px 15px;
+      margin: 12px 0 16px;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      margin: 10px 0 14px;
+    }
+
+    .flow span {
+      background: var(--accent-soft);
+      border: 1px solid #fed7aa;
+      color: #7c3f00;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-weight: 750;
+      font-size: 14px;
+    }
+
+    .flow b { color: var(--muted); }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    ul { margin: 8px 0 0; padding-left: 22px; }
+    li { margin: 4px 0; }
+
+    @media (max-width: 760px) {
+      .cols { grid-template-columns: 1fr; }
+      header, section { padding: 20px; }
+      h1 { font-size: 25px; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 9px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>猫咪梳毛挑战 · 首版功能规则 v0.8 精简版</h1>
+      <p class="subtitle">只保留程序实现必须知道的规则、参数、流程和验收标准。</p>
+      <div class="tags">
+        <span class="tag">一关无尽</span>
+        <span class="tag">拖动梳毛</span>
+        <span class="tag">单次拖动一次掉毛</span>
+        <span class="tag">显示当前积分</span>
+        <span class="tag">隐藏连击倍率</span>
+        <span class="tag">无限广告复活</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>0. 首版结论</h2>
+      <div class="quote">
+        玩家在猫咪区域按下，梳子出现在点击位置；拖动到猫咪身体区域并达到距离阈值后，触发一次梳毛、掉毛、加分。同一次拖动只计一次，但不限制继续拖动。猫咪回头后，超过反应时间还触发梳毛就失败；失败后可无限看广告复活。
+      </div>
+
+      <div class="cols">
+        <div>
+          <h3>必须做</h3>
+          <ul>
+            <li>拖动梳毛，不是点击梳毛。</li>
+            <li>一次拖动最多计一次。</li>
+            <li>触发后继续拖动仍跟手，只是不再掉毛。</li>
+            <li>局内固定位置显示当前积分。</li>
+            <li>复活次数无限，每次看广告。</li>
+          </ul>
+        </div>
+        <div>
+          <h3>不做</h3>
+          <ul>
+            <li>不做关卡、通关、金币、商城、养成。</li>
+            <li>不在毛发位置显示本次加分。</li>
+            <li>不展示连击、倍率。</li>
+            <li>不展示玩家手，只展示梳子。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>1. 核心状态</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>状态</th>
+            <th>字段值</th>
+            <th>说明</th>
+            <th>有效梳毛结果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>放松</td>
+            <td><code>Idle</code></td>
+            <td>猫咪没回头。</td>
+            <td>成功梳毛，加分，掉毛。</td>
+          </tr>
+          <tr>
+            <td>警觉</td>
+            <td><code>Alert</code></td>
+            <td>猫咪回头。</td>
+            <td>未超过 X 秒可成功；超过 X 秒则被发现。</td>
+          </tr>
+          <tr>
+            <td>发现</td>
+            <td><code>Discovered</code></td>
+            <td>猫咪发怒。</td>
+            <td>本局中断，弹复活。</td>
+          </tr>
+          <tr>
+            <td>复活过渡</td>
+            <td><code>Reviving</code></td>
+            <td>广告完成后的安全恢复。</td>
+            <td>短暂锁输入。</td>
+          </tr>
+          <tr>
+            <td>结束</td>
+            <td><code>GameOver</code></td>
+            <td>玩家放弃复活或重开。</td>
+            <td>不处理梳毛。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="flow">
+        <span>Idle</span><b>→</b><span>Alert</span><b>→</b><span>Idle</span>
+      </div>
+      <div class="flow">
+        <span>Alert 超过 X 秒</span><b>+</b><span>触发梳毛</span><b>→</b><span>Discovered</span><b>→</b><span>复活弹窗</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 输入与区域规则</h2>
+
+      <h3>2.1 两个区域</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>区域</th>
+            <th>字段</th>
+            <th>规则</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>可点击拖动区域</td>
+            <td><code>catInteractArea</code></td>
+            <td>框住猫咪整体的方形/矩形区域。只有在这里按下，才出现梳子并开始拖动。</td>
+          </tr>
+          <tr>
+            <td>可掉毛区域</td>
+            <td><code>catGroomableArea</code></td>
+            <td>猫咪身体区域。只有梳子在这里移动，才累计有效梳毛距离。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2.2 单次拖动</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>行为</th>
+            <th>规则</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>按下</td>
+            <td>若在 <code>catInteractArea</code> 内，梳子出现在点击位置。</td>
+          </tr>
+          <tr>
+            <td>拖动</td>
+            <td>梳子跟随手指移动。</td>
+          </tr>
+          <tr>
+            <td>在身体区域拖够距离</td>
+            <td>触发一次有效梳毛。</td>
+          </tr>
+          <tr>
+            <td>同一次拖动继续移动</td>
+            <td>梳子继续跟手，但不再计分、不再掉毛。</td>
+          </tr>
+          <tr>
+            <td>再次梳毛</td>
+            <td>必须松开，再重新按下拖动。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code">onPointerDown(pos):
+  if !inside(catInteractArea, pos): return
+  isDragging = true
+  hasGroomedThisDrag = false
+  combPosition = pos
+  dragDistance = 0
+  showCombAt(pos)
+
+onPointerMove(pos):
+  if !isDragging or isInputLocked: return
+
+  moveCombTo(pos)
+
+  if hasGroomedThisDrag:
+    return  # 继续跟手，但不再掉毛
+
+  if inside(catGroomableArea, pos):
+    dragDistance += distance(pos, lastPointerPosition)
+    if dragDistance >= groomDistanceThreshold:
+      hasGroomedThisDrag = true
+      tryTriggerGroom()
+  else:
+    dragDistance = 0
+
+onPointerUp():
+  isDragging = false
+  hasGroomedThisDrag = false
+  dragDistance = 0</div>
+    </section>
+
+    <section>
+      <h2>3. 梳毛、加分、掉毛</h2>
+
+      <h3>3.1 展示规则</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>内容</th>
+            <th>是否展示</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>当前积分</td>
+            <td>展示</td>
+            <td>局内只在一个固定位置展示。</td>
+          </tr>
+          <tr>
+            <td>本次加分</td>
+            <td>不展示</td>
+            <td>毛发位置不弹 <code>+1</code>、<code>+10</code>。</td>
+          </tr>
+          <tr>
+            <td>连击 / 倍率</td>
+            <td>不展示</td>
+            <td>隐藏规则。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 隐藏连击规则</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>连击序号</th>
+            <th>有效倍率</th>
+            <th>本次得分</th>
+            <th>掉毛数量</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>1</td><td>+1</td><td>1 个</td></tr>
+          <tr><td>2</td><td>2</td><td>+2</td><td>2 个</td></tr>
+          <tr><td>3</td><td>3</td><td>+3</td><td>3 个</td></tr>
+          <tr><td>4</td><td>4</td><td>+4</td><td>4 个</td></tr>
+          <tr><td>5</td><td>5</td><td>+5</td><td>5 个</td></tr>
+          <tr><td>6</td><td>6</td><td>+6</td><td>6 个</td></tr>
+          <tr><td>7</td><td>7</td><td>+7</td><td>7 个</td></tr>
+          <tr><td>8</td><td>8</td><td>+8</td><td>8 个</td></tr>
+          <tr><td>9</td><td>9</td><td>+9</td><td>9 个</td></tr>
+          <tr><td>10+</td><td>10</td><td>+10</td><td>10 个</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        超过 <code>2 秒</code> 没有成功梳毛，连击重置。被发现或复活后，连击也重置。
+      </div>
+
+      <div class="code">applySuccessfulGroom():
+  if now - lastGroomTime > comboExpireDuration:
+    comboCount = 0
+
+  comboCount += 1
+  multiplier = min(comboCount, 10)
+
+  scoreGained = multiplier
+  furDropCount = multiplier
+
+  currentScore += scoreGained
+  lastGroomTime = now
+
+  updateScoreUI(currentScore)
+  spawnFur(furDropCount)</div>
+    </section>
+
+    <section>
+      <h2>4. 警觉与失败</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>规则</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>警觉</td>
+            <td>猫咪回头，状态变为 <code>Alert</code>。</td>
+          </tr>
+          <tr>
+            <td>发现</td>
+            <td>猫咪发怒，状态变为 <code>Discovered</code>。</td>
+          </tr>
+          <tr>
+            <td>发现判定</td>
+            <td><code>Alert</code> 状态持续超过 <code>discoverDelayAfterAlert</code> 后，玩家再次触发有效梳毛，则失败。</td>
+          </tr>
+          <tr>
+            <td>安全停手</td>
+            <td>如果玩家不触发有效梳毛，等 <code>alertTotalDuration</code> 结束，猫咪回到 <code>Idle</code>。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code">tryTriggerGroom():
+  if catState == "Idle":
+    applySuccessfulGroom()
+    return
+
+  if catState == "Alert":
+    if alertElapsedTime >= discoverDelayAfterAlert:
+      triggerDiscovered()
+    else:
+      applySuccessfulGroom()
+    return</div>
+    </section>
+
+    <section>
+      <h2>5. 动态难度</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>阶段</th>
+            <th>当前积分</th>
+            <th>Idle 间隔</th>
+            <th>警觉持续</th>
+            <th>发现延迟 X</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>0 ~ 30</td><td>2.8 ~ 4.2s</td><td>1.4s</td><td>0.9s</td></tr>
+          <tr><td>2</td><td>31 ~ 80</td><td>2.2 ~ 3.4s</td><td>1.3s</td><td>0.7s</td></tr>
+          <tr><td>3</td><td>81 ~ 160</td><td>1.6 ~ 2.6s</td><td>1.2s</td><td>0.5s</td></tr>
+          <tr><td>4</td><td>161 ~ 300</td><td>1.2 ~ 2.0s</td><td>1.1s</td><td>0.3s</td></tr>
+          <tr><td>5</td><td>301+</td><td>0.9 ~ 1.6s</td><td>1.0s</td><td>0s</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        分数进入新阶段后，不打断当前猫咪状态。等下一次回到 <code>Idle</code> 时再应用新阶段参数。
+      </div>
+    </section>
+
+    <section>
+      <h2>6. 复活规则</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>项目</th>
+            <th>规则</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>复活入口</td>
+            <td>被发现后弹出：看广告继续 / 放弃。</td>
+          </tr>
+          <tr>
+            <td>复活次数</td>
+            <td>无限。</td>
+          </tr>
+          <tr>
+            <td>复活消耗</td>
+            <td>每次都看一次激励广告。</td>
+          </tr>
+          <tr>
+            <td>复活后积分</td>
+            <td>保留当前积分。</td>
+          </tr>
+          <tr>
+            <td>复活后连击</td>
+            <td>清空。</td>
+          </tr>
+          <tr>
+            <td>复活后状态</td>
+            <td>猫咪回到 <code>Idle</code>，给 <code>1.0s</code> 安全期。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>7. 美术与 UI</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>资源 / UI</th>
+            <th>规则</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>猫咪放松图</td><td><code>Idle</code> 状态。</td></tr>
+          <tr><td>猫咪回头图</td><td><code>Alert</code> 状态。</td></tr>
+          <tr><td>猫咪发怒图</td><td><code>Discovered</code> 状态。</td></tr>
+          <tr><td>梳子</td><td>按下时出现在点击位置，拖动时跟随移动。</td></tr>
+          <tr><td>毛发粒子</td><td>数量等于本次得分，最多 10 个。</td></tr>
+          <tr><td>当前积分 UI</td><td>局内固定位置唯一展示。</td></tr>
+          <tr><td>复活弹窗</td><td>看广告继续 / 放弃。</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        不展示玩家手；不在毛发位置显示加分；不展示连击和倍率。
+      </div>
+    </section>
+
+    <section>
+      <h2>8. 必要字段与参数</h2>
+
+      <h3>8.1 运行字段</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>类型</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>catState</code></td><td>string</td><td><code>Idle / Alert / Discovered / Reviving / GameOver</code></td></tr>
+          <tr><td><code>currentScore</code></td><td>number</td><td>当前积分，局内展示。</td></tr>
+          <tr><td><code>comboCount</code></td><td>number</td><td>隐藏连击。</td></tr>
+          <tr><td><code>lastGroomTime</code></td><td>number</td><td>上次成功梳毛时间。</td></tr>
+          <tr><td><code>isDragging</code></td><td>boolean</td><td>是否正在拖动。</td></tr>
+          <tr><td><code>hasGroomedThisDrag</code></td><td>boolean</td><td>本次拖动是否已计入。</td></tr>
+          <tr><td><code>dragDistance</code></td><td>number</td><td>本次拖动在可掉毛区域内累计的距离。</td></tr>
+          <tr><td><code>alertElapsedTime</code></td><td>number</td><td>警觉持续时间。</td></tr>
+          <tr><td><code>reviveCount</code></td><td>number</td><td>本局复活次数。</td></tr>
+        </tbody>
+      </table>
+
+      <h3>8.2 配置参数</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>参数</th>
+            <th>默认值</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>catInteractArea</code></td><td>猫咪整体外框</td><td>可开始拖动区域。</td></tr>
+          <tr><td><code>catGroomableArea</code></td><td>猫咪身体区域</td><td>可掉毛、可加分区域。</td></tr>
+          <tr><td><code>groomDistanceThreshold</code></td><td>28</td><td>触发一次有效梳毛的拖动距离。</td></tr>
+          <tr><td><code>comboExpireDuration</code></td><td>2.0s</td><td>连击过期时间。</td></tr>
+          <tr><td><code>maxComboMultiplier</code></td><td>10</td><td>倍率和单次掉毛上限。</td></tr>
+          <tr><td><code>reviveLimit</code></td><td>null</td><td>null 表示无限复活。</td></tr>
+          <tr><td><code>reviveSafeDuration</code></td><td>1.0s</td><td>复活后安全期。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>9. 完整流程</h2>
+
+      <h3>9.1 正常梳毛</h3>
+      <div class="flow">
+        <span>按下猫咪交互区域</span><b>→</b>
+        <span>梳子出现在点击位置</span><b>→</b>
+        <span>拖动梳子</span><b>→</b>
+        <span>进入身体掉毛区域</span><b>→</b>
+        <span>累计拖动距离达到 X</span><b>→</b>
+        <span>触发一次梳毛</span><b>→</b>
+        <span>当前积分增加</span><b>→</b>
+        <span>生成毛发</span><b>→</b>
+        <span>继续拖动只跟手</span><b>→</b>
+        <span>松开后可再次拖动</span>
+      </div>
+
+      <h3>9.2 警觉安全</h3>
+      <div class="flow">
+        <span>猫咪回头</span><b>→</b>
+        <span>进入 Alert</span><b>→</b>
+        <span>玩家不触发梳毛</span><b>→</b>
+        <span>警觉时间结束</span><b>→</b>
+        <span>回到 Idle</span>
+      </div>
+
+      <h3>9.3 警觉失败</h3>
+      <div class="flow">
+        <span>猫咪回头</span><b>→</b>
+        <span>Alert 持续超过 X 秒</span><b>→</b>
+        <span>玩家再次拖动达标</span><b>→</b>
+        <span>触发梳毛判定</span><b>→</b>
+        <span>猫咪发怒</span><b>→</b>
+        <span>弹出复活</span>
+      </div>
+
+      <h3>9.4 复活继续</h3>
+      <div class="flow">
+        <span>点击看广告继续</span><b>→</b>
+        <span>广告完成</span><b>→</b>
+        <span>保留积分</span><b>→</b>
+        <span>清空连击</span><b>→</b>
+        <span>回到 Idle</span><b>→</b>
+        <span>1 秒安全期</span><b>→</b>
+        <span>继续玩</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>10. 验收标准</h2>
+      <ul>
+        <li>只能在猫咪交互区域内按下开始拖动。</li>
+        <li>按下后梳子出现在点击位置，拖动时跟手。</li>
+        <li>只有在猫咪身体掉毛区域内拖够距离，才触发梳毛。</li>
+        <li>一次拖动只触发一次掉毛和加分。</li>
+        <li>触发后继续拖动不能卡手，但不再掉毛、不再加分。</li>
+        <li>松开后重新拖动，才能再次掉毛。</li>
+        <li>当前积分只在一个固定位置展示。</li>
+        <li>不展示本次加分、连击、倍率。</li>
+        <li>连击、倍率、掉毛数量一比一，最高 10。</li>
+        <li>超过 2 秒没有成功梳毛，连击重置。</li>
+        <li>猫咪回头后，超过 X 秒再次触发梳毛会失败。</li>
+        <li>失败后可无限看广告复活，复活保留积分、清空连击。</li>
+      </ul>
+
+      <div class="ok">
+        首版目标：玩家清楚理解“拖一下梳一次”，在猫咪回头时产生“要不要再拖一下”的犹豫，并愿意通过广告继续当前积分。
+      </div>
+    </section>
+  </main>
+</body>
+</html>
