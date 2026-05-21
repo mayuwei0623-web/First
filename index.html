@@ -1,299 +1,355 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>带薪拉屎计算器</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>韭菜创业记</title>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --yellow:#FFE234;--green:#4DBA6E;--red:#F04D4D;
+  --black:#1C1C1C;--white:#FAFAF5;--gray:#F2F0E8;
+  --ink:3px solid #1C1C1C;--shadow:4px 4px 0 #1C1C1C;
+  --shadow-sm:2px 2px 0 #1C1C1C;
+}
+body{font-family:'ZCOOL KuaiLe',cursive;background:var(--white);color:var(--black);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:16px 14px 40px}
+.wrap{width:100%;max-width:400px}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: linear-gradient(135deg, #f4efe7 0%, #d7c3a1 100%);
-      color: #2c241c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+/* ── SCREENS ── */
+.screen{display:none}.screen.on{display:block}
 
-    .app {
-      width: 100%;
-      max-width: 480px;
-      background: rgba(255, 252, 245, 0.96);
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(69, 45, 20, 0.22);
-      padding: 24px;
-    }
+/* ── TITLE ── */
+.title-box{background:var(--black);border-radius:18px;padding:28px 20px 24px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden}
+.title-ticker{position:absolute;top:0;left:0;right:0;background:var(--yellow);color:var(--black);font-size:11px;padding:3px 0;letter-spacing:2px;overflow:hidden;white-space:nowrap}
+.title-main{color:var(--yellow);font-size:3.2rem;letter-spacing:6px;line-height:1;margin-top:12px}
+.title-en{color:rgba(255,226,52,.45);font-size:.75rem;letter-spacing:3px;margin-top:6px}
+.title-tag{display:inline-block;background:var(--green);color:#fff;font-size:.75rem;padding:3px 12px;border-radius:20px;margin-top:10px;border:2px solid #1C1C1C}
 
-    .title {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+.section-label{font-size:.78rem;color:#888;letter-spacing:2px;margin-bottom:10px;text-align:center}
 
-    .emoji {
-      font-size: 54px;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
+.industry-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.ibtn{background:var(--white);border:var(--ink);border-radius:13px;padding:14px 6px 12px;text-align:center;cursor:pointer;transition:all .12s;user-select:none}
+.ibtn:active,.ibtn.on{background:var(--yellow);box-shadow:var(--shadow);transform:translate(-2px,-2px)}
+.ibtn .ico{font-size:1.9rem;display:block;margin-bottom:5px}
+.ibtn .name{font-size:.88rem}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: -0.5px;
-    }
+.go-btn{width:100%;background:var(--green);color:#fff;border:var(--ink);border-radius:13px;padding:15px;font-size:1.15rem;font-family:'ZCOOL KuaiLe',cursive;cursor:pointer;box-shadow:var(--shadow);transition:all .12s;letter-spacing:2px}
+.go-btn:active{transform:translate(2px,2px);box-shadow:none}
+.go-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:var(--shadow)}
 
-    .subtitle {
-      margin: 8px 0 0;
-      color: #7b6754;
-      font-size: 14px;
-    }
+.tip{text-align:center;font-size:.72rem;color:#aaa;margin-top:10px}
 
-    .form {
-      display: grid;
-      gap: 14px;
-      margin-top: 22px;
-    }
+/* ── GAME ── */
+.day-bar{background:var(--black);color:var(--yellow);text-align:center;padding:9px;border-radius:10px;font-size:.95rem;letter-spacing:3px;margin-bottom:10px}
 
-    label {
-      font-size: 14px;
-      color: #5f4a38;
-      font-weight: 700;
-    }
+.prog-wrap{height:7px;background:var(--gray);border-radius:99px;border:1.5px solid #ddd;margin-bottom:12px}
+.prog-fill{height:100%;background:var(--green);border-radius:99px;transition:width .6s}
 
-    .field {
-      display: grid;
-      gap: 6px;
-    }
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.sc{background:var(--white);border:var(--ink);border-radius:11px;padding:7px 3px;text-align:center}
+.sc-ico{font-size:1.3rem}
+.sc-val{font-size:.88rem;font-weight:bold;line-height:1.3}
+.sc-lab{font-size:.62rem;color:#999;margin-top:1px}
 
-    input {
-      width: 100%;
-      border: 1px solid #dfcfbd;
-      border-radius: 14px;
-      padding: 14px 14px;
-      font-size: 16px;
-      outline: none;
-      background: #fffaf2;
-      color: #2c241c;
-    }
+.ev-card{background:var(--white);border:var(--ink);border-radius:16px;padding:18px 16px;margin-bottom:12px;min-height:110px}
+.ev-meta{font-size:.7rem;color:#aaa;letter-spacing:1px;margin-bottom:8px}
+.ev-body{font-size:.97rem;line-height:1.75;color:var(--black)}
+.ev-result{margin-top:10px;padding-top:10px;border-top:2px dashed #e0e0e0;font-size:.83rem;color:#555;line-height:1.7}
+.deltas{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.dtag{display:inline-block;font-size:.75rem;padding:2px 9px;border-radius:20px;font-weight:bold;border:1.5px solid}
+.pos{background:#E6F7EC;color:#1E6B3A;border-color:#A8DFB8}
+.neg{background:#FEF0EF;color:#B03030;border-color:#F0AEAE}
+.neu{background:#F5F5F0;color:#666;border-color:#D8D8D0}
 
-    input:focus {
-      border-color: #a87942;
-      box-shadow: 0 0 0 3px rgba(168, 121, 66, 0.14);
-    }
+.loading-ev{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 0;gap:10px}
+.spinner{width:28px;height:28px;border:3px solid #eee;border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:.83rem;color:#aaa}
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+.choices-label{font-size:.78rem;color:#888;letter-spacing:1px;margin-bottom:9px}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cbtn{background:var(--white);border:var(--ink);border-radius:12px;padding:13px 5px;text-align:center;cursor:pointer;transition:all .12s;user-select:none}
+.cbtn:active,.cbtn.on{background:#E8F7ED;box-shadow:var(--shadow-sm);transform:translate(-2px,-2px)}
+.cbtn .cico{font-size:1.5rem;display:block;margin-bottom:4px}
+.cbtn .ctxt{font-size:.8rem;line-height:1.3}
 
-    button {
-      margin-top: 8px;
-      border: 0;
-      border-radius: 16px;
-      padding: 15px 18px;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #fff;
-      background: linear-gradient(135deg, #8a5a2b 0%, #5b3517 100%);
-      box-shadow: 0 10px 24px rgba(91, 53, 23, 0.25);
-    }
+.next-btn{width:100%;background:var(--black);color:var(--yellow);border:var(--ink);border-radius:13px;padding:15px;font-size:1.05rem;font-family:'ZCOOL KuaiLe',cursive;cursor:pointer;letter-spacing:3px;box-shadow:var(--shadow);transition:all .12s}
+.next-btn:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}
+.next-btn:disabled{opacity:.35;cursor:not-allowed}
 
-    button:active {
-      transform: translateY(1px);
-    }
+/* ── END ── */
+.end-hero{background:var(--black);color:var(--yellow);border-radius:18px;padding:28px 20px;text-align:center;margin-bottom:14px}
+.end-ico{font-size:3.5rem;margin-bottom:12px}
+.end-title{font-size:1.75rem;margin-bottom:6px}
+.end-sub{font-size:.85rem;opacity:.65;letter-spacing:1px}
 
-    .result {
-      margin-top: 22px;
-      padding: 20px;
-      border-radius: 20px;
-      background: #fff2dc;
-      border: 1px solid #edd5b2;
-      display: none;
-    }
+.end-data{background:var(--white);border:var(--ink);border-radius:14px;padding:16px;margin-bottom:14px;font-size:.9rem;line-height:2.3}
+.end-story{background:var(--gray);border:var(--ink);border-radius:14px;padding:16px;margin-bottom:16px;font-size:.93rem;line-height:1.85;color:#333}
 
-    .result.show {
-      display: block;
-    }
+.share-btn{width:100%;background:var(--yellow);color:var(--black);border:var(--ink);border-radius:13px;padding:14px;font-size:1.05rem;font-family:'ZCOOL KuaiLe',cursive;cursor:pointer;letter-spacing:2px;box-shadow:var(--shadow);margin-bottom:9px;transition:all .12s}
+.share-btn:active{transform:translate(2px,2px);box-shadow:none}
+.restart-btn{width:100%;background:transparent;color:var(--black);border:var(--ink);border-radius:13px;padding:13px;font-size:.95rem;font-family:'ZCOOL KuaiLe',cursive;cursor:pointer;transition:all .12s}
+.restart-btn:active{background:var(--gray)}
 
-    .money {
-      font-size: 42px;
-      font-weight: 900;
-      color: #6f3f16;
-      text-align: center;
-      margin: 4px 0 10px;
-      word-break: break-all;
-    }
-
-    .desc {
-      text-align: center;
-      font-size: 15px;
-      color: #6b5847;
-      line-height: 1.7;
-      margin: 0;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .stat {
-      background: rgba(255, 255, 255, 0.62);
-      border-radius: 14px;
-      padding: 12px 8px;
-      text-align: center;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 16px;
-      color: #3a2b20;
-      margin-bottom: 4px;
-    }
-
-    .stat span {
-      font-size: 12px;
-      color: #8a7561;
-    }
-
-    .tip {
-      margin-top: 16px;
-      font-size: 13px;
-      color: #8a7561;
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 420px) {
-      .app {
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: 25px;
-      }
-
-      .row {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .money {
-        font-size: 36px;
-      }
-    }
-  </style>
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:#fff;padding:10px 22px;border-radius:30px;font-family:'ZCOOL KuaiLe',cursive;font-size:.88rem;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
 </head>
 <body>
-  <main class="app">
-    <section class="title">
-      <div class="emoji">🚽</div>
-      <h1>带薪拉屎计算器</h1>
-      <p class="subtitle">上班摸鱼不可耻，至少要算得明白。</p>
-    </section>
+<div class="wrap">
 
-    <section class="form">
-      <div class="field">
-        <label for="salary">月薪 / 元</label>
-        <input id="salary" type="number" inputmode="decimal" min="0" placeholder="例如：15000" />
-      </div>
+<!-- ───── START ───── -->
+<div class="screen on" id="s-start">
+  <div class="title-box">
+    <div class="title-ticker">📈 今日头条：又有人辞职创业了 · 投资人：先看看PPT再说 · 📉 某赛道估值腰斩</div>
+    <div class="title-main">韭菜<br>创业记</div>
+    <div class="title-en">STARTUP SIMULATOR</div>
+    <div class="title-tag">AI 驱动 · 每次不同</div>
+  </div>
 
-      <div class="row">
-        <div class="field">
-          <label for="workDays">每月工作天数</label>
-          <input id="workDays" type="number" inputmode="decimal" min="1" value="22" />
-        </div>
+  <div class="section-label">— 选择你的赛道 —</div>
+  <div class="industry-grid">
+    <div class="ibtn" onclick="pickIndustry(this,'AI独角兽')"><span class="ico">🤖</span><span class="name">AI 独角兽</span></div>
+    <div class="ibtn" onclick="pickIndustry(this,'餐饮连锁')"><span class="ico">🍜</span><span class="name">餐饮连锁</span></div>
+    <div class="ibtn" onclick="pickIndustry(this,'直播电商')"><span class="ico">📱</span><span class="name">直播电商</span></div>
+    <div class="ibtn" onclick="pickIndustry(this,'教育培训')"><span class="ico">📚</span><span class="name">教育培训</span></div>
+    <div class="ibtn" onclick="pickIndustry(this,'共享经济')"><span class="ico">🛴</span><span class="name">共享经济</span></div>
+    <div class="ibtn" onclick="pickIndustry(this,'大健康')"><span class="ico">💊</span><span class="name">大健康</span></div>
+  </div>
+  <button class="go-btn" id="go-btn" onclick="startGame()" disabled>🌱 开始创业！</button>
+  <div class="tip">目标：撑过 30 天，成功上市 🚀</div>
+</div>
 
-        <div class="field">
-          <label for="hoursPerDay">每天工作小时</label>
-          <input id="hoursPerDay" type="number" inputmode="decimal" min="1" value="8" />
-        </div>
-      </div>
+<!-- ───── GAME ───── -->
+<div class="screen" id="s-game">
+  <div class="day-bar" id="day-bar">第 1 天 · 天使轮</div>
+  <div class="prog-wrap"><div class="prog-fill" id="prog" style="width:3%"></div></div>
 
-      <div class="field">
-        <label for="poopMinutes">本次带薪拉屎时长 / 分钟</label>
-        <input id="poopMinutes" type="number" inputmode="decimal" min="0" placeholder="例如：12" />
-      </div>
+  <div class="stats">
+    <div class="sc"><div class="sc-ico">💰</div><div class="sc-val" id="v-money">100万</div><div class="sc-lab">资金</div></div>
+    <div class="sc"><div class="sc-ico">👥</div><div class="sc-val" id="v-team">5人</div><div class="sc-lab">团队</div></div>
+    <div class="sc"><div class="sc-ico">📊</div><div class="sc-val" id="v-val">500万</div><div class="sc-lab">估值</div></div>
+    <div class="sc"><div class="sc-ico">🌡️</div><div class="sc-val" id="v-heat">冷清</div><div class="sc-lab">热度</div></div>
+  </div>
 
-      <button onclick="calculate()">开始计算</button>
-    </section>
+  <div class="ev-card" id="ev-card">
+    <div class="ev-meta" id="ev-meta">📰 今日动态</div>
+    <div class="ev-body" id="ev-body">万事俱备，只欠东风。你盯着 PPT 第三页的"颠覆行业"四个字，背景音乐换成《我的未来不是梦》。<br><br>今天，是第一天。</div>
+  </div>
 
-    <section id="result" class="result">
-      <div class="money" id="earned">¥0.00</div>
-      <p class="desc" id="resultText"></p>
+  <div id="choice-area">
+    <div class="choices-label">今天重点搞什么？</div>
+    <div class="choices">
+      <div class="cbtn" onclick="pickChoice(this,'tech')"><span class="cico">🔧</span><span class="ctxt">技术<br>攻关</span></div>
+      <div class="cbtn" onclick="pickChoice(this,'marketing')"><span class="cico">📣</span><span class="ctxt">疯狂<br>营销</span></div>
+      <div class="cbtn" onclick="pickChoice(this,'relations')"><span class="cico">🤝</span><span class="ctxt">关系<br>维护</span></div>
+    </div>
+  </div>
 
-      <div class="stats">
-        <div class="stat">
-          <strong id="minutePay">¥0.00</strong>
-          <span>每分钟收入</span>
-        </div>
-        <div class="stat">
-          <strong id="hourPay">¥0.00</strong>
-          <span>每小时收入</span>
-        </div>
-        <div class="stat">
-          <strong id="yearPay">¥0.00</strong>
-          <span>年化厕所收益</span>
-        </div>
-      </div>
+  <button class="next-btn" id="next-btn" onclick="doDay()" disabled>熬过这一天 →</button>
+</div>
 
-      <div class="tip" id="tip"></div>
-    </section>
-  </main>
+<!-- ───── END ───── -->
+<div class="screen" id="s-end">
+  <div class="end-hero">
+    <div class="end-ico" id="end-ico">💸</div>
+    <div class="end-title" id="end-title">公司倒闭了</div>
+    <div class="end-sub" id="end-sub">但你学到了宝贵经验</div>
+  </div>
+  <div class="end-data" id="end-data"></div>
+  <div class="end-story" id="end-story"><div class="spinner" style="margin:0 auto"></div></div>
+  <button class="share-btn" onclick="doShare()">📲 分享我的创业历程</button>
+  <button class="restart-btn" onclick="restart()">🔄 再创业一次</button>
+</div>
 
-  <script>
-    function money(value) {
-      return '¥' + Number(value || 0).toFixed(2);
-    }
+</div><!-- /wrap -->
+<div class="toast" id="toast"></div>
 
-    function getTip(minutes, earned) {
-      if (minutes <= 5) return '效率型选手：来得快，走得也快。';
-      if (minutes <= 15) return '标准发挥：老板还没发现，工资已经到账。';
-      if (minutes <= 30) return '稳定输出：这不是摸鱼，这是生理需求。';
-      if (minutes <= 60) return '高强度创收：建议带上充电器。';
-      return '厕所战神：你已经把卫生间变成了分公司。';
-    }
+<script>
+const PHASES={1:'天使轮',8:'Pre-A轮',15:'A轮',22:'B轮',28:'上市冲刺'};
+const HEAT=['冷清','有点火','网红','爆火','现象级'];
+const CNAME={tech:'技术攻关',marketing:'疯狂营销',relations:'关系维护'};
+const CCTX={
+  tech:'团队今天全力攻坚技术难题，不少人通宵',
+  marketing:'今天在各平台砸钱投广告、刷量、搞KOL',
+  relations:'今天约了一圈投资人和行业大佬喝咖啡维护关系'
+};
 
-    function calculate() {
-      const salary = Number(document.getElementById('salary').value);
-      const workDays = Number(document.getElementById('workDays').value);
-      const hoursPerDay = Number(document.getElementById('hoursPerDay').value);
-      const poopMinutes = Number(document.getElementById('poopMinutes').value);
+let G={};
 
-      if (!salary || !workDays || !hoursPerDay || !poopMinutes || salary <= 0 || workDays <= 0 || hoursPerDay <= 0 || poopMinutes <= 0) {
-        alert('请先把月薪、工作天数、工作小时和拉屎时长填完整。');
-        return;
-      }
+function getPhase(d){let p='天使轮';for(const[k,v]of Object.entries(PHASES)){if(d>=+k)p=v;}return p;}
+function getHeat(h){return HEAT[Math.min(4,Math.floor(h/20))];}
+function fmtMoney(m){return m>=10000?(m/10000).toFixed(1)+'亿':m+'万';}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-      const totalWorkMinutes = workDays * hoursPerDay * 60;
-      const payPerMinute = salary / totalWorkMinutes;
-      const payPerHour = payPerMinute * 60;
-      const earned = payPerMinute * poopMinutes;
-      const yearlyToiletIncome = earned * workDays * 12;
+function pickIndustry(el,name){
+  document.querySelectorAll('.ibtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');G.industry=name;
+  document.getElementById('go-btn').disabled=false;
+}
 
-      document.getElementById('earned').textContent = money(earned);
-      document.getElementById('minutePay').textContent = money(payPerMinute);
-      document.getElementById('hourPay').textContent = money(payPerHour);
-      document.getElementById('yearPay').textContent = money(yearlyToiletIncome);
+function pickChoice(el,c){
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');G.choice=c;
+  document.getElementById('next-btn').disabled=false;
+}
 
-      document.getElementById('resultText').textContent =
-        `本次你在厕所里创造了 ${money(earned)} 的带薪价值，耗时 ${poopMinutes} 分钟。`;
+function startGame(){
+  if(!G.industry)return;
+  G={industry:G.industry,day:1,money:100,team:5,valuation:500,heat:0,choice:null,log:[]};
+  refreshStats();
+  document.getElementById('ev-meta').textContent='📰 今日动态';
+  document.getElementById('ev-body').innerHTML=`你的<b>${G.industry}</b>创业公司今天正式成立！🎉<br><br>团队 5 个人，租了一间小格子间，Wi-Fi 密码是 <b>123456789</b>。<br>天使投资人说"这个赛道我很看好"，但估值还没谈拢。<br><br>选择今天的重点，开始搞事情吧！`;
+  document.getElementById('ev-card').style.background='';
+  document.getElementById('choice-area').style.display='';
+  document.getElementById('next-btn').disabled=true;
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('on'));
+  show('s-game');
+}
 
-      document.getElementById('tip').textContent = getTip(poopMinutes, earned);
-      document.getElementById('result').classList.add('show');
-    }
-  </script>
+function refreshStats(){
+  document.getElementById('v-money').textContent=fmtMoney(G.money);
+  document.getElementById('v-team').textContent=G.team+'人';
+  document.getElementById('v-val').textContent=fmtMoney(G.valuation);
+  document.getElementById('v-heat').textContent=getHeat(G.heat);
+  document.getElementById('day-bar').textContent=`第 ${G.day} 天 · ${getPhase(G.day)}`;
+  document.getElementById('prog').style.width=(G.day/30*100)+'%';
+}
+
+async function doDay(){
+  if(!G.choice)return;
+  const btn=document.getElementById('next-btn');
+  btn.disabled=true;
+  document.getElementById('choice-area').style.display='none';
+  // loading
+  document.getElementById('ev-body').innerHTML='<div class="loading-ev"><div class="spinner"></div><div class="loading-txt">AI 正在生成今日剧情…</div></div>';
+  document.getElementById('ev-card').style.background='';
+
+  let ev;
+  try{ ev=await callAI(); }
+  catch(e){
+    document.getElementById('ev-body').textContent='⚠️ 网络开小差，重新点击试试';
+    document.getElementById('choice-area').style.display='';
+    btn.disabled=false;
+    return;
+  }
+
+  G.money=Math.max(0,G.money+(ev.money_delta||0));
+  G.team=Math.max(0,G.team+(ev.employee_delta||0));
+  G.valuation=Math.max(0,G.valuation+(ev.valuation_delta||0));
+  G.heat=Math.min(100,Math.max(0,G.heat+(ev.heat_delta||0)));
+
+  const bgMap={positive:'#EEF9F0',negative:'#FFF5F0',neutral:'var(--white)'};
+  document.getElementById('ev-card').style.background=bgMap[ev.mood]||'var(--white)';
+
+  let dtags='';
+  if(ev.money_delta)dtags+=`<span class="dtag ${ev.money_delta>0?'pos':'neg'}">${ev.money_delta>0?'+':''}${ev.money_delta}万资金</span>`;
+  if(ev.employee_delta)dtags+=`<span class="dtag ${ev.employee_delta>0?'pos':'neg'}">${ev.employee_delta>0?'+':''}${ev.employee_delta}人</span>`;
+  if(ev.valuation_delta)dtags+=`<span class="dtag ${ev.valuation_delta>0?'pos':'neg'}">估值${ev.valuation_delta>0?'+':''}${ev.valuation_delta}万</span>`;
+
+  document.getElementById('ev-meta').textContent=`📰 第${G.day}天 · ${CNAME[G.choice]}`;
+  document.getElementById('ev-body').innerHTML=`
+    <div style="margin-bottom:10px;line-height:1.8">${ev.event}</div>
+    <div class="ev-result">${ev.result_text}<div class="deltas">${dtags}</div></div>`;
+
+  G.log.push({day:G.day,choice:G.choice,event:ev.event});
+  G.day++;
+  refreshStats();
+
+  if(G.money<=0||G.team<=0){setTimeout(()=>endGame(false),1400);return;}
+  if(G.day>30){setTimeout(()=>endGame(true),1400);return;}
+
+  G.choice=null;
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('choice-area').style.display='';
+  btn.disabled=true;
+}
+
+async function callAI(){
+  const prompt=`你是中国创业模拟游戏的剧情生成器。根据以下信息，生成一个幽默有梗的创业事件。
+
+赛道：${G.industry}
+第${G.day}天，阶段：${getPhase(G.day)}
+今日行动：${CCTX[G.choice]}
+当前资金：${G.money}万 | 团队：${G.team}人 | 估值：${G.valuation}万 | 热度：${getHeat(G.heat)}
+
+要求：
+- 结合今日行动设计事件，逻辑自洽
+- 充满中国互联网创业圈真实语境和笑点（996/估值/融资/竞品/监管/大V/舆情等）
+- 语气轻松幽默，像朋友圈段子
+
+严格按此JSON格式输出（不加markdown代码块，直接输出纯JSON）：
+{"event":"事件描述2-3句","result_text":"结果说明1句","money_delta":整数(-50到80),"employee_delta":整数(-2到3),"valuation_delta":整数(-150到250),"heat_delta":整数(-10到20),"mood":"positive或negative或neutral"}`;
+
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
+  });
+  const d=await r.json();
+  const txt=d.content[0].text.trim().replace(/```json|```/g,'').trim();
+  return JSON.parse(txt);
+}
+
+async function endGame(win){
+  document.getElementById('end-ico').textContent=win?'🚀':(G.money<=0?'💸':'😭');
+  document.getElementById('end-title').textContent=win?'恭喜成功上市！':(G.money<=0?'弹尽粮绝，倒闭':'团队散伙，一哄而散');
+  document.getElementById('end-sub').textContent=win?`第${G.day-1}天敲响了上钟`:`坚持了 ${G.day-1} 天`;
+
+  document.getElementById('end-data').innerHTML=
+    `🗓 创业天数：<b>${G.day-1} 天</b><br>`+
+    `💰 剩余资金：<b>${fmtMoney(G.money)}</b><br>`+
+    `👥 团队规模：<b>${G.team} 人</b><br>`+
+    `📊 最终估值：<b>${fmtMoney(G.valuation)}</b><br>`+
+    `🌡️ 行业热度：<b>${getHeat(G.heat)}</b><br>`+
+    `🏭 所在赛道：<b>${G.industry}</b>`;
+
+  show('s-end');
+  generateStory(win);
+}
+
+async function generateStory(win){
+  const recent=G.log.slice(-3).map(e=>e.event).join('；');
+  const prompt=`用幽默温情的语气，为一个${G.industry}创业者写简短创业总结（3-4句话）。
+
+坚持了${G.day-1}天，最终${win?'成功上市！':(G.money<=0?'资金断裂倒闭':'团队散伙')}。
+最终估值${fmtMoney(G.valuation)}，近期经历：${recent||'各种意想不到的事'}。
+
+风格：朋友圈爆款文案风，有共鸣，结尾必须有一句适合截图转发的金句。直接输出文字，不要格式标记。`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,messages:[{role:'user',content:prompt}]})
+    });
+    const d=await r.json();
+    document.getElementById('end-story').textContent=d.content[0].text.trim();
+  }catch{
+    document.getElementById('end-story').textContent='每一棵韭菜，都曾幻想过做那棵独角兽。即使被割，也要割得轰轰烈烈。';
+  }
+}
+
+function doShare(){
+  const r=G.day>30?'成功上市🚀':`坚持了${G.day-1}天`;
+  const txt=`我在【韭菜创业记】做${G.industry}，${r}！\n最终估值${fmtMoney(G.valuation)}，${getHeat(G.heat)}热度。\n\n你敢来试试吗？#韭菜创业记`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>toast('✅ 已复制！快发朋友圈'));
+  }else{
+    prompt('复制这段文字发朋友圈：',txt);
+  }
+}
+
+function restart(){
+  const ind=G.industry;
+  G={};
+  document.querySelectorAll('.ibtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('go-btn').disabled=true;
+  show('s-start');
+}
+</script>
 </body>
 </html>
